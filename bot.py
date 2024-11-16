@@ -1,3 +1,4 @@
+#Todos os tokens foram retirados por questão de privacidade
 import os
 import discord
 from discord.ext import commands
