@@ -1,9 +1,5 @@
 #Todos os tokens foram retirados por questão de privacidade
 import os
-import discord
-from discord.ext import commands
-from dotenv import load_dotenv
-import os
 import sqlite3
 import discord
 from discord.ext import commands
@@ -81,6 +77,21 @@ async def escolher(ctx, cargo: str):
         await ctx.author.add_roles(role)
         await ctx.send(f'O cargo {cargo} foi atribuído a você.')
         log_role_change(ctx.author.id, str(ctx.author), role.name, 'added')
+
+# Comando para exibir os logs
+@bot.command()
+async def ver_logs(ctx):
+    c.execute('SELECT * FROM logs ORDER BY timestamp DESC LIMIT 10')
+    logs = c.fetchall()
+    
+    if not logs:
+        await ctx.send('Nenhum log encontrado.')
+        return
+    
+    log_messages = [f"ID: {log[0]} | Usuário: {log[2]} | Cargo: {log[3]} | Ação: {log[4]} | Data/Hora: {log[5]}" for log in logs]
+    log_messages_str = "\n".join(log_messages)
+    
+    await ctx.send(f"Últimas mudanças de cargos:\n{log_messages_str}")
 
 # Executa o bot
 bot.run(TOKEN)
